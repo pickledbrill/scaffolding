@@ -1,0 +1,1 @@
+Scaffolding - A tool to initialize github repository

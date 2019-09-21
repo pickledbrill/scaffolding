@@ -23,8 +23,20 @@ type RepoStructure struct {
 	Files []string `json:"files"`
 }
 
+// GitConfig stores the configuration value.
+var GitConfig Config
+
+// InitializeConfig sets the configuration value to GitConfig variable.
+func InitializeConfig() {
+	config, err := loadConfig()
+	if err != nil {
+		panic(err)
+	}
+	GitConfig = *config
+}
+
 // LoadConfig reads the config.json file and load configuration.
-func LoadConfig() (*Config, error) {
+func loadConfig() (*Config, error) {
 	jsonFile, err := os.Open("../config.json")
 	if err != nil {
 		return nil, err

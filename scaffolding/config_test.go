@@ -5,7 +5,7 @@ import (
 )
 
 func TestLoadConfig_LoadDefault_ShouldSuccess(t *testing.T) {
-	config, err := LoadConfig()
+	config, err := loadConfig()
 	if err != nil {
 		t.Error(err)
 	}

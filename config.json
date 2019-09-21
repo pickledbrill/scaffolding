@@ -1,0 +1,16 @@
+{
+    "access": {
+        "access_token": ""
+    },
+    "repo_structure": [
+        {
+            "structure_name": "default",
+            "files": [
+                "README.md",
+                ".gitignore",
+                "go.mod",
+                "main.go"
+            ]
+        }
+    ]
+}

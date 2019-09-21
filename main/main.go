@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	scaffolding "github.com/pickledbrill/scaffolding/scaffolding"
+)
 
 func main() {
-	fmt.Println("sss")
+	fmt.Println("Starting")
+	scaffolding.InitializeConfig()
+	scaffolding.AuthenticateUser()
 }

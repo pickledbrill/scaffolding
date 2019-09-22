@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	appErrors "github.com/pickledbrill/scaffolding/scaffolding/error"
@@ -34,7 +35,7 @@ func AuthenticateUser() error {
 }
 
 // CreateRepository sends the create repository http request to Github v3 API.
-func CreateRepository(post RepositoryPost) error {
+func CreateRepository(post RepositoryPost) (*RepositoryPostReturn, error) {
 	requestURL := buildURL("createRepo")
 	jsonValue, _ := json.Marshal(post)
 	req, err := http.NewRequest("POST", requestURL, bytes.NewBuffer(jsonValue))
@@ -44,9 +45,14 @@ func CreateRepository(post RepositoryPost) error {
 		panic(err)
 	}
 	if resp.StatusCode != 201 {
-		return errors.New(appErrors.FailedRepositoryCreationError)
+		return nil, errors.New(appErrors.FailedRepositoryCreationError)
 	}
-	return nil
+
+	result := RepositoryPostReturn{}
+	body, err := ioutil.ReadAll(resp.Body)
+	json.Unmarshal(body, &result)
+
+	return &result, nil
 }
 
 // buildURL concats the http request url for different requests

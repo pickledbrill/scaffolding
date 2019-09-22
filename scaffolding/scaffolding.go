@@ -11,6 +11,7 @@ import (
 func VerifyFlags(args ...interface{}) error {
 	template := args[0].(string)
 	name := args[1].(string)
+	workDir := args[2].(string)
 
 	if strings.TrimSpace(name) == "" {
 		return errors.New(appErrors.InvalidRepositoryNameError)
@@ -18,11 +19,14 @@ func VerifyFlags(args ...interface{}) error {
 	if !checkTemplateExist(template) {
 		return errors.New(appErrors.RepositoryTemplateNotFoundError)
 	}
+	if strings.TrimSpace(workDir) == "" {
+		return errors.New(appErrors.InvalidDirectoryError)
+	}
 	return nil
 }
 
 // Process handles user validation and repository creation.
-func Process(template string, name string, private bool) {
+func Process(template string, name string, private bool, workDir string) {
 	// authenticate user
 	err := AuthenticateUser()
 	if err != nil {
@@ -33,10 +37,18 @@ func Process(template string, name string, private bool) {
 		Name:    name,
 		Private: private,
 	}
-	err = CreateRepository(postBody)
+	returnResult, err := CreateRepository(postBody)
 	if err != nil {
 		panic(err)
 	}
+
+	templatePtr := getTemplate(template)
+	// setup repository
+	ok, err := SetupRepository(workDir, templatePtr.Files)
+	if !ok {
+		panic(err)
+	}
+	GitInitRepository(workDir, *returnResult)
 }
 
 func checkTemplateExist(name string) bool {
@@ -48,4 +60,15 @@ func checkTemplateExist(name string) bool {
 		}
 	}
 	return result
+}
+
+func getTemplate(name string) *RepoStructure {
+	structure := &RepoStructure{}
+	for _, template := range GitConfig.TemplateStructure {
+		if template.Name == name {
+			structure = &template
+			break
+		}
+	}
+	return structure
 }

@@ -1,7 +1,7 @@
 package scaffolding
 
-// CreateRepo creates a public repository under user's github account.
-func CreateRepo() {}
-
-// CreatePrivateRepo creates a private repository under user's github account.
-func CreatePrivateRepo() {}
+// RepositoryPost is the post body for create repository request.
+type RepositoryPost struct {
+	Name    string `json:"name"`
+	Private bool   `json:"private"`
+}

@@ -21,6 +21,24 @@ func VerifyFlags(args ...interface{}) error {
 	return nil
 }
 
+// Process handles user validation and repository creation.
+func Process(template string, name string, private bool) {
+	// authenticate user
+	err := AuthenticateUser()
+	if err != nil {
+		panic(err)
+	}
+	// create repository
+	postBody := RepositoryPost{
+		Name:    name,
+		Private: private,
+	}
+	err = CreateRepository(postBody)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func checkTemplateExist(name string) bool {
 	result := false
 	for _, template := range GitConfig.TemplateStructure {

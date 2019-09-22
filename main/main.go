@@ -8,7 +8,7 @@ import (
 
 func main() {
 	templatePtr := flag.String("template", "default", "Specify the project template used to create the repository.")
-	visibilityPtr := flag.Bool("public", true, "Specify the project is public repository or private repository.")
+	visibilityPtr := flag.Bool("private", false, "Specify the project is public repository or private repository.")
 	namePtr := flag.String("name", "", "Repository name.")
 
 	flag.Parse()

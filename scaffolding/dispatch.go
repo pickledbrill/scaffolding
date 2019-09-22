@@ -2,9 +2,9 @@ package scaffolding
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
+	appErrors "github.com/pickledbrill/scaffolding/scaffolding/error"
 	requestDispatch "github.com/pickledbrill/scaffolding/scaffolding/request"
 )
 
@@ -19,15 +19,14 @@ func AuthenticateUser() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(GitConfig.Access.AccessToken)
 	resp, err := requestDispatch.DispatchRequest(req, GitConfig.Access.AccessToken)
 	defer resp.Body.Close()
 	if err != nil {
 		panic(err)
 	}
-	body, err := ioutil.ReadAll(resp.Body)
-	bodyStr := string(body)
-	fmt.Println(bodyStr)
+	if resp.StatusCode != 200 {
+		panic(appErrors.FailedUserAuthenticationError)
+	}
 }
 
 // buildURL concats the http request url for different requests

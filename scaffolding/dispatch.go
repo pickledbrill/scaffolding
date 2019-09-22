@@ -1,6 +1,9 @@
 package scaffolding
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -13,7 +16,7 @@ const GithubV3URL string = "https://api.github.com"
 
 // AuthenticateUser authenticates the user's identity via sending request to
 // Github v3 API.
-func AuthenticateUser() {
+func AuthenticateUser() error {
 	requestURL := buildURL("authenticate")
 	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
@@ -25,8 +28,25 @@ func AuthenticateUser() {
 		panic(err)
 	}
 	if resp.StatusCode != 200 {
-		panic(appErrors.FailedUserAuthenticationError)
+		return errors.New(appErrors.FailedUserAuthenticationError)
 	}
+	return nil
+}
+
+// CreateRepository sends the create repository http request to Github v3 API.
+func CreateRepository(post RepositoryPost) error {
+	requestURL := buildURL("createRepo")
+	jsonValue, _ := json.Marshal(post)
+	req, err := http.NewRequest("POST", requestURL, bytes.NewBuffer(jsonValue))
+	resp, err := requestDispatch.DispatchRequest(req, GitConfig.Access.AccessToken)
+	defer resp.Body.Close()
+	if err != nil {
+		panic(err)
+	}
+	if resp.StatusCode != 201 {
+		return errors.New(appErrors.FailedRepositoryCreationError)
+	}
+	return nil
 }
 
 // buildURL concats the http request url for different requests

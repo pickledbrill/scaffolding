@@ -6,6 +6,34 @@ import (
 	appErrors "github.com/pickledbrill/scaffolding/scaffolding/error"
 )
 
+func TestCheckTemplateExist_ShouldSuccess(t *testing.T) {
+	// setup
+	GitConfig.TemplateStructure = make([]RepoStructure, 1)
+	GitConfig.TemplateStructure[0] = RepoStructure{
+		Name: "default",
+	}
+	expectedResult := true
+	result := checkTemplateExist("default")
+	// validate
+	if expectedResult != result {
+		t.Error("Result doesn't match")
+	}
+}
+
+func TestCheckTemplateExist_ShouldFail(t *testing.T) {
+	// setup
+	GitConfig.TemplateStructure = make([]RepoStructure, 1)
+	GitConfig.TemplateStructure[0] = RepoStructure{
+		Name: "default",
+	}
+	expectedResult := false
+	result := checkTemplateExist("test")
+	// validate
+	if expectedResult != result {
+		t.Error("Result doesn't match")
+	}
+}
+
 func TestVerifyFlags_ShouldSuccess(t *testing.T) {
 	// setup
 	GitConfig.TemplateStructure = make([]RepoStructure, 1)

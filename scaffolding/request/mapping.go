@@ -3,6 +3,7 @@ package request
 // RequestURLMap stores the url mapping for different requests.
 var RequestURLMap = map[string]string{
 	"authenticate": "/user",
+	"createRepo":   "/user/repos",
 }
 
 // CheckURLExist checks whether the http request action has a mapping URL.

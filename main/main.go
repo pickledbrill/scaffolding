@@ -2,24 +2,21 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/pickledbrill/scaffolding/scaffolding"
 )
 
 func main() {
 	templatePtr := flag.String("template", "default", "Specify the project template used to create the repository.")
-	visibilityPtr := flag.Bool("public", true, "Specify the project is public repository or private repository.")
+	visibilityPtr := flag.Bool("private", false, "Specify the project is public repository or private repository.")
 	namePtr := flag.String("name", "", "Repository name.")
 
 	flag.Parse()
-	fmt.Println(*templatePtr)
-	fmt.Println(*visibilityPtr)
-	fmt.Println(*namePtr)
 
 	scaffolding.InitializeConfig()
 	if err := scaffolding.VerifyFlags(*templatePtr, *namePtr); err != nil {
 		panic(err)
 	}
-	// scaffolding.AuthenticateUser()
+
+	scaffolding.Process(*templatePtr, *namePtr, *visibilityPtr)
 }
